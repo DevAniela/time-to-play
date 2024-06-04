@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Coiny&family=Sono:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link href="style.css" rel="stylesheet" />
+    <title>Jocuri</title>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="logo">
+          <img src="/Weekend Web App (Jonas)/timp-de-joacă/public/mdi--child-toy.svg" height="70" width="70" alt="Teddy bear icon"></img>
+          <h1>Timp de joacă</h1>
+        </div>
+        <button class="btn btn-large btn-open">scrie un joc</button>
+      </header>
+
+      <form class="joc-form hidden">
+        <input type="text" placeholder="cum se joacă... " />
+        <span>200</span>
+        <input type="text" placeholder="link la ceva distractiv... " />
+        <select>
+          <option value="">alege o categorie</option>
+          <option value="încălzire">încălzire</option>
+          <option value="introspecție">introspecție</option>
+          <option value="povești">povești</option>
+          <option value="emoții">emoții</option>
+          <option value="online">online</option>
+          <option value="relaxare">relaxare</option>
+          <option value="reflecție">reflecție</option>
+        </select>
+        <button class="btn btn-large">Trimite</button>
+      </form>
+
+      <main class="main">
+        <aside>
+          <ul>
+            <li>
+              <button class="btn btn-toate-cat">TOATE CATEGORIILE</button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #f97316">
+                încălzire
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #16a34a">
+                introspecție
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #ef4444">
+                povești
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #eab308">
+                emoții
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #db2777">
+                online
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #3b82f6">
+                relaxare
+              </button>
+            </li>
+            <li class="categorie">
+              <button class="btn btn-cat" style="background-color: #8b5cf6">
+                reflecție
+              </button>
+            </li>
+          </ul>
+        </aside>
+
+        <section>
+          <ul class="listă-jocuri">
+            <li class="joc">
+              <p>
+                Se începe o numărătoare de la 1, iar când se ajunge la orice
+                multiplu de 3, acesta se înlocuiește cu plici; după ce se
+                stabilizează ritmul, se introduce următoarea regulă: multiplii
+                de 5 se înlocuiesc cu placi. Se pot introduce mai multe reguli
+                pe rând, după ce ritmul numărătorii redevine constant. Se pot
+                introduce reguli simple sau complicate, în funcție de nivelul
+                copilului și de viteza cu care se adaptează la schimbări (de
+                exemplu: schimbarea sensului numărătorii când se ajunge la plici
+                sau la placi; înlocuirea cuvintelor cu bătăi din palme, cu
+                excepția cuvintelor plici și placi etc.).
+                <a
+                  class="link"
+                  href="https://www.youtube.com/watch?v=GhRylsmL4og"
+                  target="_blank"
+                  >(ceva distractiv)</a
+                >
+              </p>
+              <span class="categorie" style="background-color: #f97316"
+                >încălzire</span
+              >
+              <div class="btn-vot">
+                <button>😊 3</button>
+                <button>🤩 5</button>
+                <button>🥱 1</button>
+              </div>
+            </li>
+            <li class="joc">
+              <p>
+                Unul dintre parteneri își alege o pasiune sau un hobby și îl
+                ține secret. Celălalt partener trebuie să ghicească pasiunea sau
+                hobby-ul ascuns prin intermediul unor întrebări. Persoana care
+                își ascunde pasiunea trebuie să răspundă doar cu „da” sau „nu”
+                la întrebările celuilalt partener.
+                <a
+                  class="link"
+                  href="https://pbskids.org/peg/games/music-maker/"
+                  target="_blank"
+                  >(ceva distractiv)</a
+                >
+              </p>
+              <span class="categorie" style="background-color: #16a34a"
+                >introspecție</span
+              >
+              <div class="btn-vot">
+                <button>😊 3</button>
+                <button>🤩 5</button>
+                <button>🥱 1</button>
+              </div>
+            </li>
+            <li class="joc">
+              <p>
+                Coordonatorul începe povestea și apoi copilul continuă să o
+                dezvolte. Pe măsură ce povestea avansează, coordonatorul
+                introduce noi reguli sau provocări. De exemplu, copilului i se
+                poate cere să folosească numai cuvinte care nu conțin litera
+                „C”; să înceapă fiecare propoziție cu un verb; să introducă în
+                poveste lucruri amuzante sau șocante; să introducă un animal în
+                poveste și să descrie cum interacționează cu personajele; să
+                reia tot ce s-a întâmplat înainte dar în ordine inversă; să
+                introducă un element surpriză în poveste și să improvizeze o
+                soluție creativă pentru a rezolva situația; să nu folosească
+                cuvinte comune, cum ar fi „și”, „sau”, „dar” etc.; să folosească
+                metafore sau comparații în povestire; să adapteze povestea la un
+                mediu sau la un personaj nou. Jocul poate continua în acest fel,
+                fiecare participant contribuind la dezvoltarea și încâlcirea
+                poveștii.
+                <a
+                  class="link"
+                  href="https://www.youtube.com/watch?v=BELlZKpi1Zs"
+                  target="_blank"
+                  >(ceva distractiv)</a
+                >
+              </p>
+              <span class="categorie" style="background-color: #ef4444"
+                >povești</span
+              >
+              <div class="btn-vot">
+                <button>😊 3</button>
+                <button>🤩 5</button>
+                <button>🥱 1</button>
+              </div>
+            </li>
+          </ul>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
