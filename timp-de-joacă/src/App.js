@@ -69,27 +69,13 @@ function Counter() {
 }
 
 function App() {
-  const appTitle = "Timp de joacă";
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <>
-      {/* HEADER */}
-      <header class="header">
-        <div class="logo">
-          <img
-            src="mdi--child-toy.svg"
-            height="70"
-            width="70"
-            alt="Teddy bear logo"
-          ></img>
-          <h1>{appTitle}</h1>
-        </div>
+      <Header show={showForm} setShowForm={setShowForm} />
 
-        <button class="btn btn-large btn-open">scrie un joc</button>
-      </header>
-
-      <Counter />
-      <ScrieUnJoc />
+      {showForm ? <ScrieUnJoc /> : null}
 
       <main className="main">
         <FiltruCategorii />
@@ -99,8 +85,28 @@ function App() {
   );
 }
 
-function ScrieUnJoc() {
-  return <form className="joc-form">scrie un joc</form>;
+function Header({ showForm, setShowForm }) {
+  const appTitle = "Timp de joacă";
+  return (
+    <header className="header">
+      <div className="logo">
+        <img
+          src="mdi--child-toy.svg"
+          height="70"
+          width="70"
+          alt="Teddy bear logo"
+        />
+        <h1>{appTitle}</h1>
+      </div>
+
+      <button
+        className="btn btn-large btn-open"
+        onClick={() => setShowForm((show) => !show)}
+      >
+        {showForm ? "închide" : "scrie un joc"}
+      </button>
+    </header>
+  );
 }
 
 const CATEGORII = [
@@ -112,6 +118,45 @@ const CATEGORII = [
   { name: "relaxare", color: "#3b82f6" },
   { name: "reflecție", color: "#8b5cf6" },
 ];
+
+function ScrieUnJoc() {
+  const [reguli, setReguli] = useState("");
+  const [link, setLink] = useState("");
+  const [categorie, setCategorie] = useState("");
+  const reguliLength = reguli.length;
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(reguli, link, categorie);
+  }
+
+  return (
+    <form className="joc-form" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="cum se joacă... "
+        value={reguli}
+        onChange={(e) => setReguli(e.target.value)}
+      />
+      <span>{900 - reguliLength}</span>
+      <input
+        value={link}
+        type="text"
+        placeholder="link la ceva distractiv... "
+        onChange={(e) => setLink(e.target.value)}
+      />
+      <select value={categorie} onChange={(e) => setCategorie(e.target.value)}>
+        <option value="">alege o categorie</option>
+        {CATEGORII.map((cat) => (
+          <option key={cat.name} value={cat.name}>
+            {cat.name.toUpperCase()}
+          </option>
+        ))}
+      </select>
+      <button className="btn btn-large">Trimite</button>
+    </form>
+  );
+}
 
 function FiltruCategorii() {
   return (
