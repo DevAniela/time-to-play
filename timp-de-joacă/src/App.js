@@ -73,11 +73,20 @@ function Counter() {
 function App() {
   const [showForm, setShowForm] = useState(false);
   const [jocuri, setJocuri] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(function () {
     async function getJocuri() {
-      const { data: jocuri, error } = await supabase.from("jocuri").select("*");
-      setJocuri(jocuri);
+      setIsLoading(true);
+      const { data: jocuri, error } = await supabase
+        .from("jocuri")
+        .select("*")
+        .order("votDrăguț", { ascending: false })
+        .limit(100);
+
+      if (!error) setJocuri(jocuri);
+      else alert("A fost o problemă cu datele.");
+      setIsLoading(false);
     }
     getJocuri();
   }, []);
@@ -91,10 +100,14 @@ function App() {
 
       <main className="main">
         <FiltruCategorii />
-        <ListăJocuri jocuri={jocuri} />
+        {isLoading ? <Loader /> : <ListăJocuri jocuri={jocuri} />}
       </main>
     </>
   );
+}
+
+function Loader() {
+  return <p className="message">Loading...</p>;
 }
 
 function Header({ showForm, setShowForm }) {
