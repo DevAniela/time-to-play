@@ -14,7 +14,7 @@ const jocuriInit = [
       "Ce făceai ca să păstrezi ritmul constant?",
       "De ce crezi că devine mai ușor să respecți regula după un timp?",
     ],
-    link: "https://www.youtube.com/watch?v=GhRylsmL4og",
+    extraLink: "https://www.youtube.com/watch?v=GhRylsmL4og",
     drăguț: 10,
     super: 9,
     plictisitor: 1,
@@ -31,7 +31,7 @@ const jocuriInit = [
       "Care întrebare te-a adus cel mai aproape de a ghici pasiunea?",
       "Ce ai învățat despre mine în timpul acestui joc? Ce altceva poți deduce pe baza acestor aspecte?",
     ],
-    link: "https://pbskids.org/peg/games/music-maker/",
+    extraLink: "https://pbskids.org/peg/games/music-maker/",
     drăguț: 13,
     super: 8,
     plictisitor: 0,
@@ -48,7 +48,7 @@ const jocuriInit = [
       "Care sunt părțile componente ale unei povești?",
       "La ce crezi că ne ajută acest exercițiu?",
     ],
-    link: "https://www.youtube.com/watch?v=BELlZKpi1Zs",
+    extraLink: "https://www.youtube.com/watch?v=BELlZKpi1Zs",
     drăguț: 15,
     super: 3,
     plictisitor: 2,
@@ -70,16 +70,18 @@ function Counter() {
 
 function App() {
   const [showForm, setShowForm] = useState(false);
+  const [jocuri, setJocuri] = useState(jocuriInit);
 
   return (
     <>
-      <Header show={showForm} setShowForm={setShowForm} />
-
-      {showForm ? <ScrieUnJoc /> : null}
+      <Header showForm={showForm} setShowForm={setShowForm} />
+      {showForm ? (
+        <ScrieUnJoc setJocuri={setJocuri} setShowForm={setShowForm} />
+      ) : null}
 
       <main className="main">
         <FiltruCategorii />
-        <ListăJocuri />
+        <ListăJocuri jocuri={jocuri} />
       </main>
     </>
   );
@@ -119,15 +121,51 @@ const CATEGORII = [
   { name: "reflecție", color: "#8b5cf6" },
 ];
 
-function ScrieUnJoc() {
+function isValidHttpUrl(string) {
+  let url;
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [reguli, setReguli] = useState("");
-  const [link, setLink] = useState("");
+  const [extraLink, setLink] = useState("http://cevadistractiv.com");
   const [categorie, setCategorie] = useState("");
   const reguliLength = reguli.length;
 
   function handleSubmit(e) {
+    //1. Prevent browser reload.
     e.preventDefault();
-    console.log(reguli, link, categorie);
+    console.log(reguli, extraLink, categorie);
+    //2. Check if data is valid. If so, create new game.
+    if (reguli && isValidHttpUrl(extraLink) && categorie && reguliLength <= 900)
+      console.log("there is valid data");
+
+    //3. Create a new joc object.
+    const jocNou = {
+      id: Math.round(Math.random() * 1000000),
+      postatÎn: new Date().getFullYear(),
+      extraLink,
+      reguli,
+      categorie,
+      drăguț: 0,
+      super: 0,
+      plictisitor: 0,
+    };
+    //4. Add the new game to the UI: add the game to state.
+    setJocuri((jocuri) => [jocNou, ...jocuri]);
+
+    //5. Reset input fields.
+    setReguli("");
+    setLink("");
+    setCategorie("");
+
+    //6. Close the form.
+    setShowForm(false);
   }
 
   return (
@@ -140,7 +178,7 @@ function ScrieUnJoc() {
       />
       <span>{900 - reguliLength}</span>
       <input
-        value={link}
+        value={extraLink}
         type="text"
         placeholder="link la ceva distractiv... "
         onChange={(e) => setLink(e.target.value)}
@@ -181,10 +219,7 @@ function FiltruCategorii() {
   );
 }
 
-function ListăJocuri() {
-  //TEMPORARY
-  const jocuri = jocuriInit;
-
+function ListăJocuri({ jocuri }) {
   return (
     <section>
       <ul className="listă-jocuri">
@@ -202,7 +237,7 @@ function Joc({ joc }) {
     <li className="joc">
       <p>
         {joc.reguli}
-        <a className="link" href={joc.link} target="_blank">
+        <a className="extraLink" href={joc.extraLink} target="_blank">
           (ceva distractiv)
         </a>
       </p>

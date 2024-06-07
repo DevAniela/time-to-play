@@ -125,16 +125,16 @@ ul {
   list-style: none;
 }
 
-.link:link,
-.link:visited {
+.extraLink:link,
+.extraLink:visited {
   color: #a8a29e;
   text-decoration: none;
   margin-left: 12px;
   transition: 0.3s;
 }
 
-.link:hover,
-.link:active {
+.extraLink:hover,
+.extraLink:active {
   color: #3b82f6;
 }
 
