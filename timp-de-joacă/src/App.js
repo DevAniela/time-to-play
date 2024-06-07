@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import supabase from "./supabase";
+
 import "./style.css";
 
 const jocuriInit = [
@@ -70,7 +72,15 @@ function Counter() {
 
 function App() {
   const [showForm, setShowForm] = useState(false);
-  const [jocuri, setJocuri] = useState(jocuriInit);
+  const [jocuri, setJocuri] = useState([]);
+
+  useEffect(function () {
+    async function getJocuri() {
+      const { data: jocuri, error } = await supabase.from("jocuri").select("*");
+      setJocuri(jocuri);
+    }
+    getJocuri();
+  }, []);
 
   return (
     <>
@@ -227,7 +237,7 @@ function ListăJocuri({ jocuri }) {
           <Joc key={joc.id} joc={joc} />
         ))}
       </ul>
-      <p>Sunt {jocuri.length} jocuri în baza de date. Adaugă unul!</p>
+      <p>Sunt {jocuri.length} jocuri în baza de date. Adaugă unul nou!</p>
     </section>
   );
 }
