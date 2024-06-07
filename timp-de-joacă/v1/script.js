@@ -11,7 +11,7 @@ const jocuriInit = [
       "Ce făceai ca să păstrezi ritmul constant?",
       "De ce crezi că devine mai ușor să respecți regula după un timp?",
     ],
-    link: "https://www.youtube.com/watch?v=GhRylsmL4og",
+    extraLink: "https://www.youtube.com/watch?v=GhRylsmL4og",
     drăguț: 3,
     super: 5,
     plictisitor: 1,
@@ -28,7 +28,7 @@ const jocuriInit = [
       "Care întrebare te-a adus cel mai aproape de a ghici pasiunea?",
       "Ce ai învățat despre mine în timpul acestui joc? Ce altceva poți deduce pe baza acestor aspecte?",
     ],
-    link: "https://pbskids.org/peg/games/music-maker/",
+    extraLink: "https://pbskids.org/peg/games/music-maker/",
     drăguț: 3,
     super: 5,
     plictisitor: 1,
@@ -45,7 +45,7 @@ const jocuriInit = [
       "Care sunt părțile componente ale unei povești?",
       "La ce crezi că ne ajută acest exercițiu?",
     ],
-    link: "https://www.youtube.com/watch?v=BELlZKpi1Zs",
+    extraLink: "https://www.youtube.com/watch?v=BELlZKpi1Zs",
     drăguț: 3,
     super: 5,
     plictisitor: 1,
@@ -95,7 +95,9 @@ function creareListăJocuri(dataArray) {
   const htmlArr = dataArray.map(
     (joc) => `<li class="joc">
     <p>${joc.reguli}
-    <a class="link" href=${joc.link} target="_blank">(ceva distractiv)</a>
+    <a class="extraLink" href=${
+      joc.extraLink
+    } target="_blank">(ceva distractiv)</a>
     </p>
     <span class="categorie" style="background-color: ${
       CATEGORII.find((cat) => cat.name === joc.categorie).color
