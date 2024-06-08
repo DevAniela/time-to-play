@@ -274,9 +274,9 @@ function Joc({ joc }) {
         {joc.categorie}
       </span>
       <div className="btn-vot">
-        <button>😊 {joc.drăguț}</button>
-        <button>🤩 {joc.super}</button>
-        <button>🥱 {joc.plictisitor}</button>
+        <button>😊 {joc.votDrăguț}</button>
+        <button>🤩 {joc.votSuper}</button>
+        <button>🥱 {joc.votPlictisitor}</button>
       </div>
     </li>
   );
