@@ -163,11 +163,12 @@ function isValidHttpUrl(string) {
 
 function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [reguli, setReguli] = useState("");
-  const [extraLink, setLink] = useState("http://cevadistractiv.com");
+  const [extraLink, setExtraLink] = useState("http://cevadistractiv.com");
   const [categorie, setCategorie] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const reguliLength = reguli.length;
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     //1. Prevent browser reload.
     e.preventDefault();
     console.log(reguli, extraLink, categorie);
@@ -175,23 +176,32 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
     if (reguli && isValidHttpUrl(extraLink) && categorie && reguliLength <= 900)
       console.log("there is valid data");
 
-    //3. Create a new joc object.
-    const jocNou = {
-      id: Math.round(Math.random() * 1000000),
-      postatÎn: new Date().getFullYear(),
-      extraLink,
-      reguli,
-      categorie,
-      drăguț: 0,
-      super: 0,
-      plictisitor: 0,
-    };
+    //3. Create a new 'joc' object.
+    // const jocNou = {
+    //   id: Math.round(Math.random() * 1000000),
+    //   postatÎn: new Date().getFullYear(),
+    //   extraLink,
+    //   reguli,
+    //   categorie,
+    //   drăguț: 0,
+    //   super: 0,
+    //   plictisitor: 0,
+    // };
+
+    //3. Upload 'joc' to supabase and receive the new 'joc' object.
+    setIsUploading(true);
+    const { data: jocNou, error } = await supabase
+      .from("jocuri")
+      .insert([{ reguli, extraLink, categorie }])
+      .select();
+    setIsUploading(false);
+
     //4. Add the new game to the UI: add the game to state.
-    setJocuri((jocuri) => [jocNou, ...jocuri]);
+    setJocuri((jocuri) => [jocNou[0], ...jocuri]);
 
     //5. Reset input fields.
     setReguli("");
-    setLink("");
+    setExtraLink("");
     setCategorie("");
 
     //6. Close the form.
@@ -205,15 +215,21 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
         placeholder="cum se joacă... "
         value={reguli}
         onChange={(e) => setReguli(e.target.value)}
+        disabled={isUploading}
       />
       <span>{900 - reguliLength}</span>
       <input
         value={extraLink}
         type="text"
         placeholder="link la ceva distractiv... "
-        onChange={(e) => setLink(e.target.value)}
+        onChange={(e) => setExtraLink(e.target.value)}
+        disabled={isUploading}
       />
-      <select value={categorie} onChange={(e) => setCategorie(e.target.value)}>
+      <select
+        value={categorie}
+        onChange={(e) => setCategorie(e.target.value)}
+        disabled={isUploading}
+      >
         <option value="">alege o categorie</option>
         {CATEGORII.map((cat) => (
           <option key={cat.name} value={cat.name}>
@@ -221,7 +237,9 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
           </option>
         ))}
       </select>
-      <button className="btn btn-large">Trimite</button>
+      <button className="btn btn-large" disabled={isUploading}>
+        Trimite
+      </button>
     </form>
   );
 }
