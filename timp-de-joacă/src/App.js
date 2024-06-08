@@ -74,22 +74,29 @@ function App() {
   const [showForm, setShowForm] = useState(false);
   const [jocuri, setJocuri] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentCat, setcurrentCat] = useState("toate");
 
-  useEffect(function () {
-    async function getJocuri() {
-      setIsLoading(true);
-      const { data: jocuri, error } = await supabase
-        .from("jocuri")
-        .select("*")
-        .order("votDrăguț", { ascending: false })
-        .limit(100);
+  useEffect(
+    function () {
+      async function getJocuri() {
+        setIsLoading(true);
 
-      if (!error) setJocuri(jocuri);
-      else alert("A fost o problemă cu datele.");
-      setIsLoading(false);
-    }
-    getJocuri();
-  }, []);
+        let query = supabase.from("jocuri").select("*");
+
+        if (currentCat !== "toate") query = query.eq("categorie", currentCat);
+
+        const { data: jocuri, error } = await query
+          .order("votDrăguț", { ascending: false })
+          .limit(100);
+
+        if (!error) setJocuri(jocuri);
+        else alert("A fost o problemă cu datele.");
+        setIsLoading(false);
+      }
+      getJocuri();
+    },
+    [currentCat]
+  );
 
   return (
     <>
@@ -99,7 +106,7 @@ function App() {
       ) : null}
 
       <main className="main">
-        <FiltruCategorii />
+        <FiltruCategorii setcurrentCat={setcurrentCat} />
         {isLoading ? <Loader /> : <ListăJocuri jocuri={jocuri} />}
       </main>
     </>
@@ -219,12 +226,17 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
   );
 }
 
-function FiltruCategorii() {
+function FiltruCategorii({ setcurrentCat }) {
   return (
     <aside>
       <ul>
         <li className="categorie">
-          <button className="btn btn-toate-cat">TOATE CATEGORIILE</button>
+          <button
+            className="btn btn-toate-cat"
+            onClick={() => setcurrentCat("toate")}
+          >
+            TOATE CATEGORIILE
+          </button>
         </li>
 
         {CATEGORII.map((cat) => (
@@ -232,6 +244,7 @@ function FiltruCategorii() {
             <button
               className="btn btn-cat"
               style={{ backgroundColor: cat.color }}
+              onClick={() => setcurrentCat(cat.name)}
             >
               {cat.name}
             </button>
@@ -243,6 +256,13 @@ function FiltruCategorii() {
 }
 
 function ListăJocuri({ jocuri }) {
+  if (jocuri.length === 0)
+    return (
+      <p className="message">
+        😮 Încă nu există jocuri în această categorie. Adaugă-l tu pe primul! 😊
+      </p>
+    );
+
   return (
     <section>
       <ul className="listă-jocuri">
