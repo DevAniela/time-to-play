@@ -113,8 +113,8 @@ h1 {
   gap: 8px;
 }
 
-.btn-vot button:hover {
-  background-color: #292524;
+.btn-vot button:disabled {
+  background-color: #44403c;
 }
 
 .btn-vot button {

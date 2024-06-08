@@ -107,7 +107,11 @@ function App() {
 
       <main className="main">
         <FiltruCategorii setcurrentCat={setcurrentCat} />
-        {isLoading ? <Loader /> : <ListăJocuri jocuri={jocuri} />}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <ListăJocuri jocuri={jocuri} setJocuri={setJocuri} />
+        )}
       </main>
     </>
   );
@@ -197,7 +201,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
     setIsUploading(false);
 
     //4. Add the new game to the UI: add the game to state.
-    setJocuri((jocuri) => [jocNou[0], ...jocuri]);
+    if (!error) setJocuri((jocuri) => [jocNou[0], ...jocuri]);
 
     //5. Reset input fields.
     setReguli("");
@@ -273,7 +277,7 @@ function FiltruCategorii({ setcurrentCat }) {
   );
 }
 
-function ListăJocuri({ jocuri }) {
+function ListăJocuri({ jocuri, setJocuri }) {
   if (jocuri.length === 0)
     return (
       <p className="message">
@@ -285,7 +289,7 @@ function ListăJocuri({ jocuri }) {
     <section>
       <ul className="listă-jocuri">
         {jocuri.map((joc) => (
-          <Joc key={joc.id} joc={joc} />
+          <Joc key={joc.id} joc={joc} setJocuri={setJocuri} />
         ))}
       </ul>
       <p>Sunt {jocuri.length} jocuri în baza de date. Adaugă unul nou!</p>
@@ -293,7 +297,25 @@ function ListăJocuri({ jocuri }) {
   );
 }
 
-function Joc({ joc }) {
+function Joc({ joc, setJocuri }) {
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  async function handleVot(columnName) {
+    setIsUpdating(true);
+    const { data: updatedJoc, error } = await supabase
+      .from("jocuri")
+      .update({ [columnName]: joc[columnName] + 1 })
+      .eq("id", joc.id)
+      .select();
+    setIsUpdating(false);
+
+    console.log(updatedJoc);
+    if (!error)
+      setJocuri((jocuri) =>
+        jocuri.map((j) => (j.id === joc.id ? updatedJoc[0] : j))
+      );
+  }
+
   return (
     <li className="joc">
       <p>
@@ -312,9 +334,18 @@ function Joc({ joc }) {
         {joc.categorie}
       </span>
       <div className="btn-vot">
-        <button>😊 {joc.votDrăguț}</button>
-        <button>🤩 {joc.votSuper}</button>
-        <button>🥱 {joc.votPlictisitor}</button>
+        <button onClick={() => handleVot("votDrăguț")} disabled={isUpdating}>
+          😊 {joc.votDrăguț}
+        </button>
+        <button onClick={() => handleVot("votSuper")} disabled={isUpdating}>
+          🤩 {joc.votSuper}
+        </button>
+        <button
+          onClick={() => handleVot("votPlictisitor")}
+          disabled={isUpdating}
+        >
+          🥱 {joc.votPlictisitor}
+        </button>
       </div>
     </li>
   );
