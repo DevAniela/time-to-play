@@ -263,7 +263,11 @@ function ListăJocuri({ jocuri, setJocuri }) {
           <Joc key={joc.id} joc={joc} setJocuri={setJocuri} />
         ))}
       </ul>
-      <p>Sunt {jocuri.length} jocuri în baza de date. Adaugă unul nou!</p>
+      <p>
+        {jocuri.length > 1
+          ? `Sunt ${jocuri.length} jocuri în baza de date. Adaugă unul nou! 😊`
+          : "Este doar 1 joc în această categorie. Adaugă și tu unul! 😊"}
+      </p>
     </section>
   );
 }
