@@ -3,60 +3,6 @@ import supabase from "./supabase";
 
 import "./style.css";
 
-const jocuriInit = [
-  {
-    id: 1,
-    nume: "Plici Placi",
-    reguli:
-      "Se începe o numărătoare de la 1, iar când se ajunge la orice multiplu de 3, acesta se înlocuiește cu plici; după ce se stabilizează ritmul, se introduce următoarea regulă: multiplii de 5 se înlocuiesc cu placi. Se pot introduce mai multe reguli pe rând, după ce ritmul numărătorii redevine constant. Se pot introduce reguli simple sau complicate, în funcție de nivelul copilului și de viteza cu care se adaptează la schimbări (de exemplu: schimbarea sensului numărătorii când se ajunge la plici sau la placi; înlocuirea cuvintelor cu bătăi din palme, cu excepția cuvintelor plici și placi etc.).",
-    categorie: "încălzire",
-    obiective: ["concentrare", "detensionarea atmosferei", "matematică"],
-    întrebări: [
-      "Ce se întâmpla în momentul în care trebuia să te adaptezi la o nouă regulă?",
-      "Ce făceai ca să păstrezi ritmul constant?",
-      "De ce crezi că devine mai ușor să respecți regula după un timp?",
-    ],
-    extraLink: "https://www.youtube.com/watch?v=GhRylsmL4og",
-    drăguț: 10,
-    super: 9,
-    plictisitor: 1,
-  },
-  {
-    id: 2,
-    nume: "Află pasiunile mele",
-    reguli:
-      "Unul dintre parteneri își alege o pasiune sau un hobby și îl ține secret. Celălalt partener trebuie să ghicească pasiunea sau hobby-ul ascuns prin intermediul unor întrebări. Persoana care își ascunde pasiunea trebuie să răspundă doar cu „da” sau „nu” la întrebările celuilalt partener.",
-    categorie: "introspecție",
-    obiective: ["comunicare", "colaborare", "conversație", "conexiune"],
-    întrebări: [
-      "Care a fost cea mai grea parte a jocului de ghicit? De ce?",
-      "Care întrebare te-a adus cel mai aproape de a ghici pasiunea?",
-      "Ce ai învățat despre mine în timpul acestui joc? Ce altceva poți deduce pe baza acestor aspecte?",
-    ],
-    extraLink: "https://pbskids.org/peg/games/music-maker/",
-    drăguț: 13,
-    super: 8,
-    plictisitor: 0,
-  },
-  {
-    id: 3,
-    nume: "Poveștile încâlcite",
-    reguli:
-      "Coordonatorul începe povestea și apoi copilul continuă să o dezvolte. Pe măsură ce povestea avansează, coordonatorul introduce noi reguli sau provocări. De exemplu, copilului i se poate cere să folosească numai cuvinte care nu conțin litera „C”; să înceapă fiecare propoziție cu un verb; să introducă în poveste lucruri amuzante sau șocante; să introducă un animal în poveste și să descrie cum interacționează cu personajele; să reia tot ce s-a întâmplat înainte dar în ordine inversă; să introducă un element surpriză în poveste și să improvizeze o soluție creativă pentru a rezolva situația; să nu folosească cuvinte comune, cum ar fi „și”, „sau”, „dar” etc.; să folosească metafore sau comparații în povestire; să adapteze povestea la un mediu sau la un personaj nou. Jocul poate continua în acest fel, fiecare participant contribuind la dezvoltarea și încâlcirea poveștii.",
-    categorie: "povești",
-    obiective: ["imaginație", "spontaneitate", "gândire creativă"],
-    întrebări: [
-      "Care cerință a fost cel mai greu de îndeplinit? De ce?",
-      "Care sunt părțile componente ale unei povești?",
-      "La ce crezi că ne ajută acest exercițiu?",
-    ],
-    extraLink: "https://www.youtube.com/watch?v=BELlZKpi1Zs",
-    drăguț: 15,
-    super: 3,
-    plictisitor: 2,
-  },
-];
-
 function Counter() {
   const [count, setCount] = useState(0);
 
@@ -75,13 +21,14 @@ function App() {
   const [jocuri, setJocuri] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [currentCat, setcurrentCat] = useState("toate");
+  const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
 
   useEffect(
     function () {
       async function getJocuri() {
         setIsLoading(true);
 
-        let query = supabase.from("jocuri").select("*");
+        let query = supabase.from("jocuri").select("*").eq("approved", true);
 
         if (currentCat !== "toate") query = query.eq("categorie", currentCat);
 
@@ -94,6 +41,16 @@ function App() {
         setIsLoading(false);
       }
       getJocuri();
+
+      // Check if the current user is an admin
+      async function checkAdmin() {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
+        if (user && user.role === "admin") setIsAdmin(true);
+      }
+      checkAdmin();
     },
     [currentCat]
   );
@@ -112,6 +69,7 @@ function App() {
         ) : (
           <ListăJocuri jocuri={jocuri} setJocuri={setJocuri} />
         )}
+        {isAdmin && <AdminPanel jocuri={jocuri} setJocuri={setJocuri} />}
       </main>
     </>
   );
@@ -175,41 +133,54 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
   async function handleSubmit(e) {
     //1. Prevent browser reload.
     e.preventDefault();
-    console.log(reguli, extraLink, categorie);
+
     //2. Check if data is valid. If so, create new game.
-    if (reguli && isValidHttpUrl(extraLink) && categorie && reguliLength <= 900)
-      console.log("there is valid data");
+    if (
+      reguli &&
+      isValidHttpUrl(extraLink) &&
+      categorie &&
+      reguliLength <= 900
+    ) {
+      //3. Upload 'joc' to supabase and receive the new 'joc' object.
+      setIsUploading(true);
 
-    //3. Create a new 'joc' object.
-    // const jocNou = {
-    //   id: Math.round(Math.random() * 1000000),
-    //   postatÎn: new Date().getFullYear(),
-    //   extraLink,
-    //   reguli,
-    //   categorie,
-    //   drăguț: 0,
-    //   super: 0,
-    //   plictisitor: 0,
-    // };
+      // Explicitly set 'approved' to false when inserting new 'joc'
+      const { data: jocNou, error } = await supabase
+        .from("jocuri")
+        .insert([{ reguli, extraLink, categorie, approved: false }])
+        .select();
 
-    //3. Upload 'joc' to supabase and receive the new 'joc' object.
-    setIsUploading(true);
-    const { data: jocNou, error } = await supabase
-      .from("jocuri")
-      .insert([{ reguli, extraLink, categorie }])
-      .select();
-    setIsUploading(false);
+      setIsUploading(false);
 
-    //4. Add the new game to the UI: add the game to state.
-    if (!error) setJocuri((jocuri) => [jocNou[0], ...jocuri]);
+      //4. Add the new game to the UI: add the game to state.
+      if (!error) {
+        //Fetch the updated list of games immediately after insertion
+        const { data: updatedJocuri, error: fetchError } = await supabase
+          .from("jocuri")
+          .select("*")
+          .eq("approved", true)
+          .order("votDrăguț", { ascending: false })
+          .limit(100);
 
-    //5. Reset input fields.
-    setReguli("");
-    setExtraLink("");
-    setCategorie("");
+        if (!fetchError) {
+          setJocuri(updatedJocuri);
 
-    //6. Close the form.
-    setShowForm(false);
+          //5. Reset input fields.
+          setReguli("");
+          setExtraLink("");
+          setCategorie("");
+
+          //6. Close the form.
+          setShowForm(false);
+        } else {
+          console.error("Error fetching updated game list:", fetchError);
+        }
+      } else {
+        console.error("Error inserting new game:", error);
+      }
+    } else {
+      console.error("Invalid game data.");
+    }
   }
 
   return (
@@ -300,6 +271,7 @@ function ListăJocuri({ jocuri, setJocuri }) {
 function Joc({ joc, setJocuri }) {
   const [isUpdating, setIsUpdating] = useState(false);
   const isPlicti = joc.votDrăguț + joc.votSuper < joc.votPlictisitor;
+
   async function handleVot(columnName) {
     setIsUpdating(true);
     const { data: updatedJoc, error } = await supabase
@@ -349,6 +321,38 @@ function Joc({ joc, setJocuri }) {
         </button>
       </div>
     </li>
+  );
+}
+
+function AdminPanel({ jocuri, setJocuri }) {
+  async function approveGame(id) {
+    const { data: updatedJoc, error } = await supabase
+      .from("jocuri")
+      .update({ approved: true })
+      .eq("id", id)
+      .select();
+
+    if (!error) {
+      setJocuri((jocuri) =>
+        jocuri.map((joc) => (joc.id === id ? updatedJoc[0] : joc))
+      );
+    }
+  }
+
+  return (
+    <div>
+      <h2>Admin Panel</h2>
+      <ul>
+        {jocuri
+          .filter((joc) => !joc.approved)
+          .map((joc) => (
+            <li key={joc.id}>
+              <p>{joc.reguli}</p>
+              <button onClick={() => approveGame(joc.id)}>Approve</button>
+            </li>
+          ))}
+      </ul>
+    </div>
   );
 }
 
