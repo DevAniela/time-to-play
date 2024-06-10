@@ -167,7 +167,7 @@ function isValidHttpUrl(string) {
 
 function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [reguli, setReguli] = useState("");
-  const [extraLink, setExtraLink] = useState("http://cevadistractiv.com");
+  const [extraLink, setExtraLink] = useState("");
   const [categorie, setCategorie] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const reguliLength = reguli.length;
@@ -299,7 +299,7 @@ function ListăJocuri({ jocuri, setJocuri }) {
 
 function Joc({ joc, setJocuri }) {
   const [isUpdating, setIsUpdating] = useState(false);
-
+  const isPlicti = joc.votDrăguț + joc.votSuper < joc.votPlictisitor;
   async function handleVot(columnName) {
     setIsUpdating(true);
     const { data: updatedJoc, error } = await supabase
@@ -319,6 +319,7 @@ function Joc({ joc, setJocuri }) {
   return (
     <li className="joc">
       <p>
+        {isPlicti ? <span className="plicti">[🥱plictisitor]</span> : null}
         {joc.reguli}
         <a className="extraLink" href={joc.extraLink} target="_blank">
           (ceva distractiv)
