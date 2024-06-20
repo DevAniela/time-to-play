@@ -139,7 +139,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
       reguli &&
       isValidHttpUrl(extraLink) &&
       categorie &&
-      reguliLength <= 900
+      reguliLength <= 1200
     ) {
       //3. Upload 'joc' to supabase and receive the new 'joc' object.
       setIsUploading(true);
@@ -192,7 +192,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
         onChange={(e) => setReguli(e.target.value)}
         disabled={isUploading}
       />
-      <span>{900 - reguliLength}</span>
+      <span>{1200 - reguliLength}</span>
       <input
         value={extraLink}
         type="text"
