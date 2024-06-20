@@ -10,44 +10,60 @@ function App() {
   const [currentCat, setcurrentCat] = useState("toate");
   const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
 
-  useEffect(
-    function () {
-      async function getJocuri() {
-        setIsLoading(true);
+  useEffect(() => {
+    async function getJocuri() {
+      setIsLoading(true);
 
-        let query = supabase.from("jocuri").select("*").eq("approved", true);
+      let query = supabase.from("jocuri").select("*").eq("approved", true);
 
-        if (currentCat !== "toate") query = query.eq("categorie", currentCat);
+      if (currentCat !== "toate") query = query.eq("categorie", currentCat);
 
+      try {
         const { data: jocuri, error } = await query
           .order("votDrăguț", { ascending: false })
           .limit(100);
 
-        if (!error) setJocuri(jocuri);
-        else alert("A fost o problemă cu datele.");
+        if (!error) {
+          setJocuri(jocuri);
+        } else {
+          alert("A fost o problemă cu datele.");
+        }
+      } catch (error) {
+        console.error("Error fetching games:", error);
+        alert("A fost o problemă cu datele.");
+      } finally {
         setIsLoading(false);
       }
-      getJocuri();
+    }
+    getJocuri();
 
-      // Check if the current user is an admin
-      async function checkAdmin() {
+    // Check if the current user is an admin
+    async function checkAdmin() {
+      try {
         const {
           data: { user },
           error,
         } = await supabase.auth.getUser();
-        if (user && user.role === "admin") setIsAdmin(true);
+        if (error) {
+          throw error;
+        }
+        if (user && user.role === "admin") {
+          setIsAdmin(true);
+        }
+      } catch (error) {
+        console.error("Error fetching user:", error);
       }
-      checkAdmin();
-    },
-    [currentCat]
-  );
+    }
+
+    checkAdmin();
+  }, [currentCat]);
 
   return (
     <>
       <Header showForm={showForm} setShowForm={setShowForm} />
-      {showForm ? (
+      {showForm && (
         <ScrieUnJoc setJocuri={setJocuri} setShowForm={setShowForm} />
-      ) : null}
+      )}
 
       <main className="main">
         <FiltruCategorii setcurrentCat={setcurrentCat} />
@@ -137,7 +153,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
       }
 
       // Insert the data into Supabase and set 'approved' to false when inserting new 'joc'
-      const { data: jocNou, error } = await supabase
+      const { error } = await supabase
         .from("jocuri")
         .insert([dataToInsert])
         .select();
@@ -202,7 +218,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
         onChange={(e) => setReguli(e.target.value)}
         disabled={isUploading}
       />
-      <span>{900 - reguliLength}</span>
+      <span>{1200 - reguliLength}</span>
       <input
         value={extraLink}
         type="text"
