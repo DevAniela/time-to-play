@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "./supabase";
+import TruncatedText from "./truncated-text";
 
 import "./style.css";
 
@@ -115,16 +116,6 @@ const CATEGORII = [
   { name: "relaxare", color: "#3b82f6" },
   { name: "reflecție", color: "#8b5cf6" },
 ];
-
-function isValidHttpUrl(string) {
-  let url;
-  try {
-    url = new URL(string);
-  } catch (_) {
-    return false;
-  }
-  return url.protocol === "http:" || url.protocol === "https:";
-}
 
 function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [reguli, setReguli] = useState("");
@@ -322,17 +313,15 @@ function Joc({ joc, setJocuri }) {
     <li className="joc">
       <p>
         {isPlicti ? <span className="plicti">[🥱plictisitor]</span> : null}
-        {joc.reguli}
-        {joc.extraLink && (
-          <a
-            className="extraLink"
-            href={joc.extraLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            (link)
-          </a>
-        )}
+        <TruncatedText text={joc.reguli} />
+        <a
+          className="extraLink"
+          href={joc.extraLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          (link)
+        </a>
       </p>
       <span
         className="categorie"
