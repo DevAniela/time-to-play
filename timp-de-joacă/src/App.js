@@ -5,7 +5,7 @@ import "./style.css";
 
 function App() {
   const [showForm, setShowForm] = useState(false);
-  const [jocuri, setJocuri] = useState([]);
+  const [jocuri, setJocuri] = useState([]); // State to hold the fetched games
   const [isLoading, setIsLoading] = useState(false);
   const [currentCat, setcurrentCat] = useState("toate");
   const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
@@ -131,33 +131,43 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [extraLink, setExtraLink] = useState("");
   const [categorie, setCategorie] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [notification, setNotification] = useState(null); // State for notification message
   const reguliLength = reguli.length;
 
   async function handleSubmit(e) {
-    //1. Prevent browser reload.
+    // Prevent browser reload.
     e.preventDefault();
 
-    //2. Check if data is valid. If so, create new game.
-    if (
-      reguli &&
-      isValidHttpUrl(extraLink) &&
-      categorie &&
-      reguliLength <= 1200
-    ) {
-      //3. Upload 'joc' to supabase and receive the new 'joc' object.
+    // Validate extraLink only if it's provided
+    const isLinkValid = extraLink === "" || isValidHttpUrl(extraLink);
+
+    // Ensure that the form can be submitted with or without extraLink.
+    if (reguli && isLinkValid && categorie && reguliLength <= 1200) {
+      // Upload 'joc' to supabase and receive the new 'joc' object.
       setIsUploading(true);
 
-      // Explicitly set 'approved' to false when inserting new 'joc'
+      // Prepare the data to be inserted
+      const dataToInsert = { reguli, categorie, approved: false };
+      if (extraLink !== "") {
+        dataToInsert.extraLink = extraLink;
+      }
+
+      // Insert the data into Supabase and set 'approved' to false when inserting new 'joc'
       const { error } = await supabase
         .from("jocuri")
-        .insert([{ reguli, extraLink, categorie, approved: false }])
+        .insert([dataToInsert])
         .select();
 
       setIsUploading(false);
 
-      //4. Add the new game to the UI: add the game to state.
+      // Add the new game to the UI: add the game to state.
       if (!error) {
-        //Fetch the updated list of games immediately after insertion
+        // Show notification to the user
+        setNotification(
+          "Jocul tău a fost trimis pentru verificare și va fi afișat în curând."
+        );
+
+        // Fetch the updated list of games after insertion
         const { data: updatedJocuri, error: fetchError } = await supabase
           .from("jocuri")
           .select("*")
@@ -168,12 +178,12 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
         if (!fetchError) {
           setJocuri(updatedJocuri);
 
-          //5. Reset input fields.
+          // Reset input fields.
           setReguli("");
           setExtraLink("");
           setCategorie("");
 
-          //6. Close the form.
+          // Close the form.
           setShowForm(false);
         } else {
           console.error("Error fetching updated game list:", fetchError);
@@ -186,8 +196,21 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
     }
   }
 
+  function isValidHttpUrl(string) {
+    let url;
+    try {
+      url = new URL(string);
+    } catch (_) {
+      return false;
+    }
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
+
   return (
     <form className="joc-form" onSubmit={handleSubmit}>
+      {/* Notification message */}
+      {notification && <p className="notification">{notification}</p>}
+
       <input
         type="text"
         placeholder="cum se joacă... "
@@ -199,7 +222,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
       <input
         value={extraLink}
         type="text"
-        placeholder="link la ceva distractiv... "
+        placeholder="link distractiv... "
         onChange={(e) => setExtraLink(e.target.value)}
         disabled={isUploading}
       />
@@ -300,14 +323,16 @@ function Joc({ joc, setJocuri }) {
       <p>
         {isPlicti ? <span className="plicti">[🥱plictisitor]</span> : null}
         {joc.reguli}
-        <a
-          className="extraLink"
-          href={joc.extraLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          (ceva distractiv)
-        </a>
+        {joc.extraLink && (
+          <a
+            className="extraLink"
+            href={joc.extraLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            (link)
+          </a>
+        )}
       </p>
       <span
         className="categorie"
