@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import supabase from "./supabase";
+import TruncatedText from "./truncated-text";
 
 import "./style.css";
 
@@ -199,7 +200,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
       <input
         value={extraLink}
         type="text"
-        placeholder="link la ceva distractiv... "
+        placeholder="link distractiv... "
         onChange={(e) => setExtraLink(e.target.value)}
         disabled={isUploading}
       />
@@ -299,14 +300,14 @@ function Joc({ joc, setJocuri }) {
     <li className="joc">
       <p>
         {isPlicti ? <span className="plicti">[🥱plictisitor]</span> : null}
-        {joc.reguli}
+        <TruncatedText text={joc.reguli} />
         <a
           className="extraLink"
           href={joc.extraLink}
           target="_blank"
           rel="noopener noreferrer"
         >
-          (ceva distractiv)
+          (link)
         </a>
       </p>
       <span

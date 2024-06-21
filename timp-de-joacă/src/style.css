@@ -138,6 +138,22 @@ h1 {
   cursor: pointer;
 }
 
+.btn-mult-puțin button {
+  border: none;
+  background-color: #78716c;
+  font-size: inherit;
+  padding: 6px 12px;
+  border-radius: 100px;
+  color: #a8a29e;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn-mult-puțin button:hover {
+  color: #a8a29e;
+  background-color: #57534e;
+}
+
 ul {
   list-style: none;
 }
