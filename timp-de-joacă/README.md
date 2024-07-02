@@ -1,43 +1,52 @@
-# Getting Started with Create React App
+# Timp de Joacă
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is an adaptation of a tutorial from "Crash Course: Build a Full-Stack Web App in a Weekend!" created by Jonas Schmedtmann, aimed at teaching the fundamentals of modern web development by building a React application. The app is in Romanian and tailored for practical use as a collection of face-to-face games aimed at children, particularly in hospital settings where creative engagement is important.
 
-## Available Scripts
+## Project Overview
+
+The application serves as a repository of face-to-face games that encourage children to take a break from technology and use creative thinking to connect with others. Inspired by theatre games, the app includes categories such as warm-up games, identity games, storytelling games, games about emotions, online games, relaxation games, and reflection games.
+
+Users can post game rules, which can be voted on as cute, super-cute, or boring. Games with more boring votes than cute and super-cute combined display a [🥱boring] flag next to their rules. After submission, games are sent to a Supabase database for review and, upon approval, are displayed on the website.
+
+## How to Post Games
+
+To contribute a new game to the Timp de joacă collection:
+
+1. Click on "Scrie un joc" (Write a game) button in the header.
+2. Fill out the game rules in the provided form, including selecting a category.
+3. Click "Trimite" (Submit) to submit your game.
+4. Your submission will be reviewed by administrators via Supabase.
+5. Once approved, your game will appear on the website for others to enjoy.
+
+## Future Enhancements
+
+Future plans include:
+
+- Adding specific questions for each game to facilitate discussions among participants.
+- Defining objectives for each game to guide coordinators.
+
+## Technologies Used
+
+- Frontend: React, HTML, CSS, JavaScript
+- Backend: Supabase (for database storage and management)
+- Deployment: Hosted on Netlify
+
+## Getting Started
 
 In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in the interactive watch mode.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Builds the app for production to the `build` folder.
 
 ## Learn More
 
@@ -45,26 +54,14 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+For more advanced configurations, deployment options, and troubleshooting tips, refer to the original [Create React App README](https://github.com/facebook/create-react-app#readme).
 
-### Analyzing the Bundle Size
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Making a Progressive Web App
+## Acknowledgements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is an adaptation of a tutorial from Jonas Schmedtmann's "Crash Course: Build a Full-Stack Web App in a Weekend!" The original tutorial focused on building an application for posting facts, while this adaptation focuses on creating a platform for posting games.
