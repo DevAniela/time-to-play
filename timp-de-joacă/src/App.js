@@ -119,7 +119,6 @@ const CATEGORII = [
 
 function ScrieUnJoc({ setJocuri, setShowForm }) {
   const [reguli, setReguli] = useState("");
-  const [extraLink, setExtraLink] = useState("");
   const [categorie, setCategorie] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [notification, setNotification] = useState(null); // State for notification message
@@ -129,19 +128,12 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
     // Prevent browser reload.
     e.preventDefault();
 
-    // Validate extraLink only if it's provided
-    const isLinkValid = extraLink === "" || isValidHttpUrl(extraLink);
-
-    // Ensure that the form can be submitted with or without extraLink.
-    if (reguli && isLinkValid && categorie && reguliLength <= 1200) {
+    if (reguli && categorie && reguliLength <= 1200) {
       // Upload 'joc' to supabase and receive the new 'joc' object.
       setIsUploading(true);
 
       // Prepare the data to be inserted
       const dataToInsert = { reguli, categorie, approved: false };
-      if (extraLink !== "") {
-        dataToInsert.extraLink = extraLink;
-      }
 
       // Insert the data into Supabase and set 'approved' to false when inserting new 'joc'
       const { error } = await supabase
@@ -171,7 +163,6 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
 
           // Reset input fields.
           setReguli("");
-          setExtraLink("");
           setCategorie("");
 
           // Close the form.
@@ -187,16 +178,6 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
     }
   }
 
-  function isValidHttpUrl(string) {
-    let url;
-    try {
-      url = new URL(string);
-    } catch (_) {
-      return false;
-    }
-    return url.protocol === "http:" || url.protocol === "https:";
-  }
-
   return (
     <form className="joc-form" onSubmit={handleSubmit}>
       {/* Notification message */}
@@ -210,13 +191,7 @@ function ScrieUnJoc({ setJocuri, setShowForm }) {
         disabled={isUploading}
       />
       <span>{1200 - reguliLength}</span>
-      <input
-        value={extraLink}
-        type="text"
-        placeholder="link distractiv... "
-        onChange={(e) => setExtraLink(e.target.value)}
-        disabled={isUploading}
-      />
+
       <select
         value={categorie}
         onChange={(e) => setCategorie(e.target.value)}
@@ -314,14 +289,6 @@ function Joc({ joc, setJocuri }) {
       <p>
         {isPlicti ? <span className="plicti">[🥱plictisitor]</span> : null}
         <TruncatedText text={joc.reguli} />
-        <a
-          className="extraLink"
-          href={joc.extraLink}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          (link)
-        </a>
       </p>
       <span
         className="categorie"
