@@ -8,6 +8,19 @@ The application serves as a repository of face-to-face games that encourage chil
 
 Users can post game rules, which can be voted on as cute, super-cute, or boring. Games with more boring votes than cute and super-cute combined display a [🥱boring] flag next to their rules. After submission, games are sent to a Supabase database for review and, upon approval, are displayed on the website.
 
+## Screenshots
+
+<p align="center">
+    <img src="screenshots/home.png" alt="Home page" height="250"/>
+    <img src="screenshots/write-choose-category-submit.png" alt="Submit game" height="250"/>
+</p>
+
+<p align="center">
+    <img src="screenshots/responsive-design.png" alt="Responsive design" width="250"/>
+    <img src="screenshots/show-more-less.png" alt="Show more/less" height="250"/>
+    <img src="screenshots/empty-category.png" alt="Empty category" height="250"/>
+</p>
+
 ## How to Post Games
 
 To contribute a new game to the Timp de joacă collection:
